@@ -50,7 +50,7 @@ def main_menu(screen, clock, screenSize):
     colors = ["#d1cbcb", "#b68f40", "#050505", "#262626", "#d7fcd4"]
     BG = pygame.image.load("assets/background2.png").convert_alpha()
     BG = pygame.transform.scale(BG, screenSize)
-
+    
     while True:
         mousePos = pygame.mouse.get_pos()
 
@@ -58,18 +58,19 @@ def main_menu(screen, clock, screenSize):
         screen.blit(BG, (0,0))
 
         #create the menu text
-        menuText = get_font(100).render("TRIVIA GAME!", True, "#b68f40")
+        menuText = get_font(100).render("TRIVIA GAME!", True, colors[1])
         menuRect = menuText.get_rect(center=(screenSize[0]/2, screenSize[1]/4))
 
-        #create the buttons
-        start_button = Button(None, (screenSize[0]/2, screenSize[1]/2), "Start", get_font(75), "#d7fcd4", "White")
-        exit_button = Button(None, (screenSize[0]/2, screenSize[1]/1.5), "Exit", get_font(75), "#d7fcd4", "White")
-
-        #draw the menu text and rectangle
         screen.blit(menuText, menuRect)
 
+        #create the buttons
+        startButton = Button(None, (screenSize[0]/2, screenSize[1]/2), "Start", get_font(75), colors[4], "White")
+        addQuestionButton = Button(None, (screenSize[0]/2, screenSize[1]/1.74), "Add question", get_font(75), colors[4], "White")
+        removeQuestionButton = Button(None, (screenSize[0]/2, screenSize[1]/1.5), "Remove Question", get_font(75), colors[4], "White")
+        exitButton = Button(None, (screenSize[0]/2, screenSize[1]/1.3), "Exit", get_font(75), colors[4], "White")
+
         #if the button is hovered over, change color to hovering_color
-        for button in [start_button, exit_button]:
+        for button in [startButton, exitButton, addQuestionButton, removeQuestionButton]:
             button.changeColor(mousePos)
             button.update(screen)
 
@@ -79,40 +80,372 @@ def main_menu(screen, clock, screenSize):
                 pygame.quit()
                 sys.exit(0)
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if (start_button.checkForInput(pygame.mouse.get_pos())):
+                if (startButton.checkForInput(pygame.mouse.get_pos())):
                     score = play_trivia("questions.json", screen, clock, screenSize)
                     score_screen(screen, clock, screenSize, score)
-                if (exit_button.checkForInput(pygame.mouse.get_pos())):
+                if (addQuestionButton.checkForInput(pygame.mouse.get_pos())):
+                    question = get_question("questions.json", screen, clock, screenSize)
+                    choices = get_choices(screen, clock, screenSize)
+                    correctAnswerIdx = get_answer(screen, clock, screenSize, choices)
+                    addedQuestion = add_question("questions.json", question, choices, correctAnswerIdx)
+                    add_question_result(screen, clock, screenSize, addedQuestion)
+                if (removeQuestionButton.checkForInput(pygame.mouse.get_pos())):
+                    removedQuestion = get_question_for_removal(screen, clock, screenSize)
+                    remove_question_result(screen, clock, screenSize, removedQuestion)
+                if (exitButton.checkForInput(pygame.mouse.get_pos())):
                     pygame.quit()
                     sys.exit(0)
         
+        #continuously update the display and set the tick rate
+        pygame.display.update()
+        clock.tick(144)
+
+#get input from the user to add a question
+def get_question(filePath, screen, clock, screenSize):
+    pygame.display.set_caption("Get question")
+    colors = ["#d1cbcb", "#b68f40", "#050505", "#262626", "#d7fcd4"]
+    BG = pygame.image.load("assets/background2.png").convert_alpha()
+    BG = pygame.transform.scale(BG, screenSize)
+    userText = ""
+    existingQuestion = None
+
+    while True:
+        mousePos = pygame.mouse.get_pos()
+
+        #screen.fill("Black")
+        screen.blit(BG, (0,0))
+
+        #create the menu text
+        addQuestionText = get_font(100).render("Type question here: ", True, colors[1])
+        addQuestionRect = addQuestionText.get_rect(center=(screenSize[0]/2, screenSize[1]/4))
+        
+        questionText = get_font(25).render(userText, True, colors[1])
+        questionRect = questionText.get_rect(center=(screenSize[0]/2, screenSize[1]/3))
+
+        existingQuestionText = get_font(50).render("Question already exists", True, colors[1])
+        existingQuestionRect = existingQuestionText.get_rect(center=(screenSize[0]/2, screenSize[1]/1.95))
+
+        #create the buttons
+        addQuestionButton = Button(None, (screenSize[0]/2, screenSize[1]/1.75), "Set question text", get_font(75), colors[4], "White")
+        exitButton = Button(None, (screenSize[0]/2, screenSize[1]/1.5), "Exit", get_font(75), colors[4], "White")
+
+        #draw the menu text and rectangle
+        screen.blit(addQuestionText, addQuestionRect)
+        screen.blit(questionText, questionRect)
+        if(existingQuestion == True):
+            screen.blit(existingQuestionText, existingQuestionRect)
+
+        #if the button is hovered over, change color to hovering_color
+        for button in [exitButton, addQuestionButton]:
+            button.changeColor(mousePos)
+            button.update(screen)
+
+        #for functionality for each button:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if (addQuestionButton.checkForInput(pygame.mouse.get_pos())):
+                    if(check_existing_question("questions.json", userText)):
+                        existingQuestion = True
+                    else:    
+                        return userText
+                if (exitButton.checkForInput(pygame.mouse.get_pos())):
+                    pygame.quit()
+                    sys.exit(0)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    userText = userText[:-1]
+                else:
+                    userText += event.unicode
+        
+        #continuously update the display and set the tick rate
+        pygame.display.update()
+        clock.tick(144)
+
+#get the choices for the question to be added
+def get_choices(screen, clock, screenSize):
+    pygame.display.set_caption("Get Choices")
+    colors = ["#d1cbcb", "#b68f40", "#050505", "#262626", "#d7fcd4"]
+    BG = pygame.image.load("assets/background2.png").convert_alpha()
+    BG = pygame.transform.scale(BG, screenSize)
+    userText = ""
+
+    while True:
+        mousePos = pygame.mouse.get_pos()
+
+        #screen.fill("Black")
+        screen.blit(BG, (0,0))
+
+        #create the menu text
+        addChoicesText = get_font(50).render("Type the 4 choices here, separated by ',': ", True, colors[1])
+        addChoicesRect = addChoicesText.get_rect(center=(screenSize[0]/2, screenSize[1]/4))
+        
+        questionText = get_font(25).render(userText, True, colors[1])
+        questionRect = questionText.get_rect(center=(screenSize[0]/2, screenSize[1]/3))
+
+        #create the buttons
+        addChoicesButton = Button(None, (screenSize[0]/2, screenSize[1]/1.75), "Add choices", get_font(75), colors[4], "White")
+        exitButton = Button(None, (screenSize[0]/2, screenSize[1]/1.5), "Exit", get_font(75), colors[4], "White")
+
+        #draw the menu text and rectangle
+        screen.blit(addChoicesText, addChoicesRect)
+        screen.blit(questionText, questionRect)
+
+        #if the button is hovered over, change color to hovering_color
+        for button in [exitButton, addChoicesButton]:
+            button.changeColor(mousePos)
+            button.update(screen)
+
+        #for functionality for each button:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if (addChoicesButton.checkForInput(pygame.mouse.get_pos())):
+                    return userText.split(",")
+                if (exitButton.checkForInput(pygame.mouse.get_pos())):
+                    pygame.quit()
+                    sys.exit(0)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    userText = userText[:-1]
+                else:
+                    userText += event.unicode
+        
+        #continuously update the display and set the tick rate
+        pygame.display.update()
+        clock.tick(144)
+
+#get the correct answer for the question to be added
+def get_answer(screen, clock, screenSize, choices):
+    pygame.display.set_caption("Get Answer")
+    colors = ["#d1cbcb", "#b68f40", "#050505", "#262626", "#d7fcd4"]
+    BG = pygame.image.load("assets/background2.png").convert_alpha()
+    BG = pygame.transform.scale(BG, screenSize)
+    userText = ""
+    correctKey = True
+
+    while True:
+        mousePos = pygame.mouse.get_pos()
+
+        #screen.fill("Black")
+        screen.blit(BG, (0,0))
+
+        #create the menu text
+        addKeyText = get_font(50).render("Type the correct choice: ", True, colors[1])
+        addKeyRect = addKeyText.get_rect(center=(screenSize[0]/2, screenSize[1]/4))
+
+        incorrectKeyText = get_font(50).render("Invalid answer, try again", True, colors[1])
+        incorrectKeyRect = incorrectKeyText.get_rect(center=(screenSize[0]/2, screenSize[1]/1.95))
+        
+        questionText = get_font(25).render(userText, True, colors[1])
+        questionRect = questionText.get_rect(center=(screenSize[0]/2, screenSize[1]/3))
+
+        #create the buttons
+        addKeyButton = Button(None, (screenSize[0]/2, screenSize[1]/1.75), "Set Correct Choice", get_font(75), colors[4], "White")
+        exitButton = Button(None, (screenSize[0]/2, screenSize[1]/1.5), "Exit", get_font(75), colors[4], "White")
+
+        #draw the menu text and rectangle
+        screen.blit(addKeyText, addKeyRect)
+        screen.blit(questionText, questionRect)
+        if (correctKey == False):
+            screen.blit(incorrectKeyText, incorrectKeyRect)
+
+        #if the button is hovered over, change color to hovering_color
+        for button in [exitButton, addKeyButton]:
+            button.changeColor(mousePos)
+            button.update(screen)
+
+        #for functionality for each button:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if (addKeyButton.checkForInput(pygame.mouse.get_pos())):
+                    for i in range(len(choices)):
+                        if (userText.lower() == choices[i].lower()):
+                            correctKey = True
+                            return i+1
+                    else:
+                        correctKey = False
+                if (exitButton.checkForInput(pygame.mouse.get_pos())):
+                    pygame.quit()
+                    sys.exit(0)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    userText = userText[:-1]
+                else:
+                    userText += event.unicode
 
         #continuously update the display and set the tick rate
         pygame.display.update()
         clock.tick(144)
 
-#start the "game trivia" window
-def play_trivia(filePath, screen, clock, screenSize):
-    pygame.display.set_caption("Trivia!")
+#show the result of the question added operation
+def add_question_result(screen, clock, screenSize, addedQuestionRes):
+    pygame.display.set_caption("Add Question Results")
+    colors = ["#d1cbcb", "#b68f40", "#050505", "#262626", "#d7fcd4", "#d96b0b"]
+    BG = pygame.image.load("assets/background2.png").convert_alpha()
+    BG = pygame.transform.scale(BG, screenSize)
+    textColor = colors[1]
+    buttonColor = colors[4]
 
-    #print("\nWelcome to trivia! Best of luck!")
-    questionsDict = get_questions_dict(filePath)
-    idx = 1
-    correctAns = 0
-    random.shuffle(questionsDict["questions"])
+    while True:
+        mousePos = pygame.mouse.get_pos()
 
-    for i in range(10):
-        triviaQuestion = f"Question {idx}: {questionsDict['questions'][i]['question']}"
-        triviaChoice1 = f"1) {questionsDict['questions'][i]['choices'][0]}"
-        triviaChoice2 = f"2) {questionsDict['questions'][i]['choices'][1]}"
-        triviaChoice3 = f"3) {questionsDict['questions'][i]['choices'][2]}"
-        triviaChoice4 = f"4) {questionsDict['questions'][i]['choices'][3]}"
-        questionAns = trivia_question(triviaQuestion, triviaChoice1, triviaChoice2, triviaChoice3, triviaChoice4, screen, clock, screenSize, idx)
+        #screen.fill("Black")
+        screen.blit(BG, (0,0))
 
-        if (questionAns == questionsDict["questions"][i]["correctAnswerIdx"]):
-            correctAns += 1
-        idx += 1
-    return correctAns
+        #create the buttons
+        mainMenu_button = Button(None, (screenSize[0]/2, screenSize[1]/2), "Main Menu", get_font(75), buttonColor, "White")
+        exit_button = Button(None, (screenSize[0]/2, screenSize[1]/1.5), "Exit", get_font(75), buttonColor, "White")
+
+        if (addedQuestionRes == True):
+            resultText = get_font(80).render(f"Question Added!", True, textColor)
+        else:
+            resultText = get_font(80).render(f"Invalid Question, Question was not added", True, textColor)
+        resultRect = resultText.get_rect(center=(screenSize[0]/2, screenSize[1]/4))
+        
+        #draw the menu text and rectangle
+        screen.blit(resultText, resultRect)
+
+        #if the button is hovered over, change color to hovering_color
+        for button in [mainMenu_button, exit_button]:
+            button.changeColor(mousePos)
+            button.update(screen)
+
+        #for functionality for each button:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if (mainMenu_button.checkForInput(pygame.mouse.get_pos())):
+                    return
+                if (exit_button.checkForInput(pygame.mouse.get_pos())):
+                    pygame.quit()
+                    sys.exit(0)
+        
+        #continuously update the display and set the tick rate
+        pygame.display.update()
+        clock.tick(144)
+
+#remove a question from the questions json file
+def get_question_for_removal(screen, clock, screenSize):
+    pygame.display.set_caption("Remove question")
+    colors = ["#d1cbcb", "#b68f40", "#050505", "#262626", "#d7fcd4"]
+    BG = pygame.image.load("assets/background2.png").convert_alpha()
+    BG = pygame.transform.scale(BG, screenSize)
+    userText = ""
+    correctQuestion = None
+
+    while True:
+        mousePos = pygame.mouse.get_pos()
+
+        #screen.fill("Black")
+        screen.blit(BG, (0,0))
+
+        #create the menu text
+        removeQuestionText = get_font(50).render("Type the question to be removed: ", True, colors[1])
+        removeQuestionRect = removeQuestionText.get_rect(center=(screenSize[0]/2, screenSize[1]/4))
+
+        invalidQuestionText = get_font(50).render("Question doesn't exist", True, colors[1])
+        invaldiQuestionRect = invalidQuestionText.get_rect(center=(screenSize[0]/2, screenSize[1]/1.95))
+        
+        questionText = get_font(25).render(userText, True, colors[1])
+        questionRect = questionText.get_rect(center=(screenSize[0]/2, screenSize[1]/3))
+
+        #create the buttons
+        removeQuestionButton = Button(None, (screenSize[0]/2, screenSize[1]/1.75), "Remove question", get_font(75), colors[4], "White")
+        exitButton = Button(None, (screenSize[0]/2, screenSize[1]/1.5), "Exit", get_font(75), colors[4], "White")
+
+        #draw the menu text and rectangle
+        screen.blit(removeQuestionText, removeQuestionRect)
+        screen.blit(questionText, questionRect)
+        if (correctQuestion == False):
+            screen.blit(invalidQuestionText, invaldiQuestionRect)
+
+        #if the button is hovered over, change color to hovering_color
+        for button in [exitButton, removeQuestionButton]:
+            button.changeColor(mousePos)
+            button.update(screen)
+
+        #for functionality for each button:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if (removeQuestionButton.checkForInput(pygame.mouse.get_pos())):
+                    if (check_existing_question("questions.json", userText)):
+                        return remove_question("questions.json", userText)
+                    else:
+                        correctQuestion = False
+                if (exitButton.checkForInput(pygame.mouse.get_pos())):
+                    pygame.quit()
+                    sys.exit(0)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    userText = userText[:-1]
+                else:
+                    userText += event.unicode
+
+        #continuously update the display and set the tick rate
+        pygame.display.update()
+        clock.tick(144)
+
+#show the result of the question removal process
+def remove_question_result(screen, clock, screenSize, removedQuestionRes):
+    pygame.display.set_caption("Remove question result")
+    colors = ["#d1cbcb", "#b68f40", "#050505", "#262626", "#d7fcd4", "#d96b0b"]
+    BG = pygame.image.load("assets/background2.png").convert_alpha()
+    BG = pygame.transform.scale(BG, screenSize)
+    textColor = colors[1]
+    buttonColor = colors[4]
+
+    while True:
+        mousePos = pygame.mouse.get_pos()
+
+        #screen.fill("Black")
+        screen.blit(BG, (0,0))
+
+        #create the buttons
+        mainMenu_button = Button(None, (screenSize[0]/2, screenSize[1]/2), "Main Menu", get_font(75), buttonColor, "White")
+        exit_button = Button(None, (screenSize[0]/2, screenSize[1]/1.5), "Exit", get_font(75), buttonColor, "White")
+
+        if (removedQuestionRes == True):
+            resultText = get_font(80).render(f"Question Removed!", True, textColor)
+        else:
+            resultText = get_font(80).render(f"Invalid Question, Question was not removed", True, textColor)
+        resultRect = resultText.get_rect(center=(screenSize[0]/2, screenSize[1]/4))
+        
+        #draw the menu text and rectangle
+        screen.blit(resultText, resultRect)
+
+        #if the button is hovered over, change color to hovering_color
+        for button in [mainMenu_button, exit_button]:
+            button.changeColor(mousePos)
+            button.update(screen)
+
+        #for functionality for each button:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if (mainMenu_button.checkForInput(pygame.mouse.get_pos())):
+                    return
+                if (exit_button.checkForInput(pygame.mouse.get_pos())):
+                    pygame.quit()
+                    sys.exit(0)
+        
+        #continuously update the display and set the tick rate
+        pygame.display.update()
+        clock.tick(144)
 
 #start the trivia game
 def trivia_question(triviaQuestion, triviaChoice1, triviaChoice2, triviaChoice3, triviaChoice4, screen, clock, screenSize, idx):
@@ -125,7 +458,6 @@ def trivia_question(triviaQuestion, triviaChoice1, triviaChoice2, triviaChoice3,
     BG = pygame.image.load("assets/Background.png").convert_alpha()
     BG = pygame.transform.scale(BG, screenSize)
 
-    #BG = pygame.image.load("assets/slop.png")
     while (True):
         mousePos = pygame.mouse.get_pos()
 
@@ -190,16 +522,6 @@ def trivia_question(triviaQuestion, triviaChoice1, triviaChoice2, triviaChoice3,
         pygame.display.update()
         clock.tick(144)
 
-#loads the question list from the json file and and returns it
-def get_questions_dict(filePath):
-    try:
-        with open(filePath, "r") as questionsFile:
-            questionsDict = json.load(questionsFile)
-        return questionsDict
-    except Exception as error:
-        print("An error occured retrieving the questions list the json file:", error)
-        sys.exit(1)
-
 #display the score to the user
 def score_screen(screen, clock, screenSize, score):
     pygame.display.set_caption("Trivia! Score")
@@ -262,8 +584,6 @@ def get_screen_size():
     pygame.display.set_caption("Resolution select")
     clock = pygame.time.Clock()
 
-    #BG = pygame.image.load("assets/floyd.jpg")
-
     while True:
         mousePos = pygame.mouse.get_pos()
 
@@ -313,3 +633,86 @@ def get_font(size, referenceRes=None, currentWidth=None, fontRatio=None):
     # Calculate the scaled font size based on the resolution ratio
     scaledSize = int(size * (currentWidth / reference_width) * fontRatio)
     return pygame.font.Font("assets/font.ttf", scaledSize)
+
+#check for existing question
+def check_existing_question(filePath, question):
+    questionsDict = get_questions_dict(filePath)
+    for existingQuestion in questionsDict["questions"]:
+        if existingQuestion["question"].lower() == question.lower():
+            return True
+    return False
+
+#remove a question from the json file
+def remove_question(filePath, question):
+    try:
+        questionsDict = get_questions_dict(filePath)
+        for existingQuestion in questionsDict["questions"]:
+            if existingQuestion["question"].lower() == question.lower():
+                questionsDict["questions"].remove(existingQuestion)
+                #print(questionsDict)
+                set_questions_dict(questionsDict, filePath)
+                #print("Question removed!")
+                return True
+        return False
+    except:
+        print("Error removing question.")
+        sys.exit(1)
+
+#sets the question dict in the json file to the dictionary specified
+def set_questions_dict(newQuestionsDict, filePath):
+    try:
+        with open(filePath, "w") as questionsFile:
+            jsonObject = json.dumps(newQuestionsDict, indent=4)
+            questionsFile.write(jsonObject)
+        return
+    except Exception as error:
+        print("An error occured retrieving the questions list the json file:", error)
+        sys.exit(1)
+
+#loads the question list from the json file and and returns it
+def get_questions_dict(filePath):
+    try:
+        with open(filePath, "r") as questionsFile:
+            questionsDict = json.load(questionsFile)
+        return questionsDict
+    except Exception as error:
+        print("An error occured retrieving the questions list the json file:", error)
+        sys.exit(1)
+
+#set the question text in the question json file
+def add_question(filePath, question, choices, correctAnswerIdx):
+    try:
+        newQuestion = {"question":question, "choices":choices, "correctAnswerIdx":correctAnswerIdx}
+
+        questionsDict = get_questions_dict(filePath)
+
+        questionsDict["questions"].append(newQuestion)
+        #print(questionsDict)
+        set_questions_dict(questionsDict, filePath)
+        return True
+    except Exception as error:
+        print("An error occured adding the question to the json file:", error)
+        sys.exit(1)
+
+#start the "game trivia" window
+def play_trivia(filePath, screen, clock, screenSize):
+    pygame.display.set_caption("Trivia!")
+
+    #print("\nWelcome to trivia! Best of luck!")
+    questionsDict = get_questions_dict(filePath)
+    idx = 1
+    correctAns = 0
+    random.shuffle(questionsDict["questions"])
+
+    for i in range(10):
+        triviaQuestion = f"Question {idx}: {questionsDict['questions'][i]['question']}"
+        triviaChoice1 = f"1) {questionsDict['questions'][i]['choices'][0]}"
+        triviaChoice2 = f"2) {questionsDict['questions'][i]['choices'][1]}"
+        triviaChoice3 = f"3) {questionsDict['questions'][i]['choices'][2]}"
+        triviaChoice4 = f"4) {questionsDict['questions'][i]['choices'][3]}"
+        questionAns = trivia_question(triviaQuestion, triviaChoice1, triviaChoice2, triviaChoice3, triviaChoice4, screen, clock, screenSize, idx)
+
+        if (questionAns == questionsDict["questions"][i]["correctAnswerIdx"]):
+            correctAns += 1
+        idx += 1
+    return correctAns
