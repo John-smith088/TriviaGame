@@ -37,4 +37,4 @@ This Python trivia game uses Pygame and consists of 29 random trivia questions. 
 - Questions sourced from Various Websites/ChatGPT
 
 # License
-This project is licensed under the [License Name] - see the LICENSE file for details.
+This project is licensed under the MIT license - see the LICENSE file for details.
