@@ -1,12 +1,12 @@
 # Python Trivia Game with Pygame
 Description
-This Python trivia game is built using Pygame and consists of 29 random trivia questions. Each question has 4 answer choices, among which one is correct. The game provides a graphical user interface (GUI) created using Pygame, offering an interactive and engaging experience for players to test their knowledge.
+This Python trivia game uses Pygame and consists of 29 random trivia questions. Each question has four answer choices, among which one is correct. The game provides a graphical user interface (GUI) created using Pygame, offering an interactive and engaging experience for players to test their knowledge.
 
 # Features
-29 Random Trivia Questions: Enjoy a variety of questions covering diverse topics.
-4 Answer Choices per Question: Choose from multiple options for each question.
-Interactive GUI: Built using Pygame to provide a visually appealing and user-friendly interface.
-Score Tracking: Keep track of your score as you answer the questions.
+- 29 Random Trivia Questions: Enjoy a variety of questions covering diverse topics.
+- 4 Answer Choices per Question: Choose from multiple options for each question.
+- Interactive GUI: Built using Pygame to provide a visually appealing and user-friendly interface.
+- Score Tracking: Keep track of your score as you answer the questions.
 
 # How to Play
 1. Installation:
@@ -14,8 +14,9 @@ Score Tracking: Keep track of your score as you answer the questions.
 - Clone the repository to your local machine.
 
 2. Setup:
-- Install Pygame: pip install pygame.
-- Run the game: python main.py.
+- Install Pygame: pip install pygame
+- Download the files from the repo
+- Run the game: python launchGame.py
 
 3. Gameplay:
 - The game starts with a main menu displaying options like Start and Exit.
