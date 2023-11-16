@@ -5,6 +5,7 @@ This Python trivia game uses Pygame and consists of 29 random trivia questions. 
 # Features
 - 29 Random Trivia Questions: Enjoy a variety of questions covering diverse topics.
 - 4 Answer Choices per Question: Choose from multiple options for each question.
+- Ability to add and remove questions to the game
 - Interactive GUI: Built using Pygame to provide a visually appealing and user-friendly interface.
 - Score Tracking: Keep track of your score as you answer the questions.
 
