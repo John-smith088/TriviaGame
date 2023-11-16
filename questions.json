@@ -1,0 +1,304 @@
+{
+    "questions": [
+        {
+            "question": "Which is NOT a fruit?",
+            "choices": [
+                "Avocado",
+                "Yam",
+                "Tomato",
+                "Plantain"
+            ],
+            "correctAnswerIdx": 2
+        },
+        {
+            "question": "What is the capital of Canada?",
+            "choices": [
+                "Toronto",
+                "Vancouver",
+                "Ottawa",
+                "Montreal"
+            ],
+            "correctAnswerIdx": 3
+        },
+        {
+            "question": "Which planet is known as the red planet?",
+            "choices": [
+                "Jupiter",
+                "Mars",
+                "Venus",
+                "Saturn"
+            ],
+            "correctAnswerIdx": 2
+        },
+        {
+            "question": "What is the largest mammal in the world?",
+            "choices": [
+                "Elephant",
+                "Blue Whale",
+                "Giraffe",
+                "Gorilla"
+            ],
+            "correctAnswerIdx": 2
+        },
+        {
+            "question": "In which year did World War II end?",
+            "choices": [
+                "1943",
+                "1945",
+                "1950",
+                "1939"
+            ],
+            "correctAnswerIdx": 2
+        },
+        {
+            "question": "Who painted the Mona Lisa?",
+            "choices": [
+                "Vincent van Gogh",
+                "Pablo Picasso",
+                "Leonardo da Vinci",
+                "Michelangelo"
+            ],
+            "correctAnswerIdx": 3
+        },
+        {
+            "question": "Which element has the chemical symbol \"H\"?",
+            "choices": [
+                "Helium",
+                "Hydrogen",
+                "Hafnium",
+                "Holmium"
+            ],
+            "correctAnswerIdx": 2
+        },
+        {
+            "question": "What is the capital of Japan?",
+            "choices": [
+                "Beijing",
+                "Seoul",
+                "Tokyo",
+                "Bangkok"
+            ],
+            "correctAnswerIdx": 3
+        },
+        {
+            "question": "How many continents are there on Earth?",
+            "choices": [
+                "Five",
+                "Six",
+                "Seven",
+                "Eight"
+            ],
+            "correctAnswerIdx": 3
+        },
+        {
+            "question": "Who wrote \"Romeo and Juliet\"?",
+            "choices": [
+                "Charles Dickens",
+                "William Shakespeare",
+                "Jane Austen",
+                "Mark Twain"
+            ],
+            "correctAnswerIdx": 2
+        },
+        {
+            "question": "Which is the smallest prime number?",
+            "choices": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "correctAnswerIdx": 2
+          },
+          {
+            "question": "What is the capital of Australia?",
+            "choices": [
+              "Sydney",
+              "Canberra",
+              "Melbourne",
+              "Perth"
+            ],
+            "correctAnswerIdx": 2
+          },
+          {
+            "question": "Which gas do plants absorb during photosynthesis?",
+            "choices": [
+              "Oxygen",
+              "Carbon Dioxide",
+              "Nitrogen",
+              "Hydrogen"
+            ],
+            "correctAnswerIdx": 2
+          },
+          {
+            "question": "What is the largest ocean on Earth?",
+            "choices": [
+              "Atlantic Ocean",
+              "Indian Ocean",
+              "Arctic Ocean",
+              "Pacific Ocean"
+            ],
+            "correctAnswerIdx": 4
+          },
+          {
+            "question": "In what year did the Titanic sink?",
+            "choices": [
+              "1905",
+              "1912",
+              "1920",
+              "1931"
+            ],
+            "correctAnswerIdx": 2
+          },
+          {
+            "question": "Who is known as the 'Father of Computer Science'?",
+            "choices": [
+              "Bill Gates",
+              "Alan Turing",
+              "Steve Jobs",
+              "Tim Berners-Lee"
+            ],
+            "correctAnswerIdx": 2
+          },
+          {
+            "question": "What is the chemical symbol for gold?",
+            "choices": [
+              "Gd",
+              "Au",
+              "Ag",
+              "Fe"
+            ],
+            "correctAnswerIdx": 2
+          },
+          {
+            "question": "Which country is known as the 'Land of the Rising Sun'?",
+            "choices": [
+              "China",
+              "South Korea",
+              "Japan",
+              "Vietnam"
+            ],
+            "correctAnswerIdx": 3
+          },
+          {
+            "question": "How many bones are there in the adult human body?",
+            "choices": [
+              "206",
+              "212",
+              "195",
+              "220"
+            ],
+            "correctAnswerIdx": 1
+          },
+          {
+            "question": "Who wrote 'The Great Gatsby'?",
+            "choices": [
+              "F. Scott Fitzgerald",
+              "Ernest Hemingway",
+              "Jane Austen",
+              "George Orwell"
+            ],
+            "correctAnswerIdx": 1
+          },
+          {
+            "question": "What is the capital of Brazil?",
+            "choices": [
+              "Rio de Janeiro",
+              "Brasília",
+              "São Paulo",
+              "Salvador"
+            ],
+            "correctAnswerIdx": 2
+          },
+          {
+            "question": "Which element has the atomic number 79?",
+            "choices": [
+              "Gold",
+              "Silver",
+              "Copper",
+              "Platinum"
+            ],
+            "correctAnswerIdx": 1
+          },
+          {
+            "question": "Who wrote 'To Kill a Mockingbird'?",
+            "choices": [
+              "Ernest Hemingway",
+              "J.K. Rowling",
+              "Harper Lee",
+              "George Orwell"
+            ],
+            "correctAnswerIdx": 3
+          },
+          {
+            "question": "In which year did the Berlin Wall fall?",
+            "choices": [
+              "1985",
+              "1989",
+              "1992",
+              "1995"
+            ],
+            "correctAnswerIdx": 2
+          },
+          {
+            "question": "What is the chemical symbol for sodium?",
+            "choices": [
+              "Na",
+              "Ni",
+              "Sn",
+              "Fe"
+            ],
+            "correctAnswerIdx": 1
+          },
+          {
+            "question": "Which country is known as the 'Land of Fire and Ice'?",
+            "choices": [
+              "Iceland",
+              "Greenland",
+              "Norway",
+              "Finland"
+            ],
+            "correctAnswerIdx": 1
+          },
+          {
+            "question": "How many players are there on a standard soccer team?",
+            "choices": [
+              "9",
+              "11",
+              "7",
+              "13"
+            ],
+            "correctAnswerIdx": 2
+          },
+          {
+            "question": "What is the capital of South Korea?",
+            "choices": [
+              "Seoul",
+              "Tokyo",
+              "Beijing",
+              "Pyongyang"
+            ],
+            "correctAnswerIdx": 1
+          },
+          {
+            "question": "Who painted 'Starry Night'?",
+            "choices": [
+              "Vincent van Gogh",
+              "Pablo Picasso",
+              "Claude Monet",
+              "Leonardo da Vinci"
+            ],
+            "correctAnswerIdx": 1
+          },
+          {
+            "question": "What is the speed of light in a vacuum?",
+            "choices": [
+              "299,792 km/s",
+              "150,000 km/s",
+              "500,000 km/s",
+              "200,000 km/s"
+            ],
+            "correctAnswerIdx": 1
+          }
+    ]
+}
