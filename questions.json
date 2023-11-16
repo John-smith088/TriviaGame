@@ -299,16 +299,6 @@
                 "200,000 km/s"
             ],
             "correctAnswerIdx": 1
-        },
-        {
-            "question": "1234",
-            "choices": [
-                "1",
-                "2",
-                "3",
-                "4"
-            ],
-            "correctAnswerIdx": 4
         }
     ]
 }
